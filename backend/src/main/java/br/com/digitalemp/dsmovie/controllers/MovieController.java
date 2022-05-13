@@ -16,16 +16,16 @@ import br.com.digitalemp.dsmovie.services.MovieService;
 public class MovieController {
 	
 	@Autowired
-	private MovieService service;
+	private MovieService movieService;
 	
 	@GetMapping
 	public Page<MovieDto> findAll(Pageable pageable) {
-		return service.findAll(pageable);
+		return movieService.findAll(pageable);
 	}
 	
 	@GetMapping(value = "/{id}")
 	public MovieDto findById(@PathVariable Long id) {
-		return service.findById(id);
+		return movieService.findById(id);
 	}	
 	
 }

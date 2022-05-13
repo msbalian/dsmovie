@@ -14,12 +14,13 @@ import br.com.digitalemp.dsmovie.repository.MovieRepository;
 public class MovieService {
 
 	@Autowired
-	private MovieRepository repository;
+	private MovieRepository movieRepository;
+	
 	
 	@Transactional(readOnly = true)
 	public Page<MovieDto> findAll(Pageable pageable) {
 		
-		Page<Movie> result = repository.findAll(pageable);
+		Page<Movie> result = movieRepository.findAll(pageable);
 		
 		return result.map(p -> new MovieDto(p));
 				
@@ -28,9 +29,9 @@ public class MovieService {
 	@Transactional(readOnly = true)
 	public MovieDto findById(Long id) {
 		
-		return new MovieDto(repository.findById(id).get());
+		return new MovieDto(movieRepository.findById(id).get());
 				
 	}
 	
-	
+
 }

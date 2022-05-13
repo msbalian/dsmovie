@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.digitalemp.dsmovie.dto.MovieDto;
 import br.com.digitalemp.dsmovie.dto.ScoreDto;
 import br.com.digitalemp.dsmovie.entities.Movie;
 import br.com.digitalemp.dsmovie.entities.Score;
@@ -24,9 +25,8 @@ public class ScoreService {
 	@Autowired
 	private ScoreRepository scoreRepository;
 	
-
 	@Transactional
-	public void saveScore(ScoreDto scoreDto) {
+	public MovieDto saveScore(ScoreDto scoreDto) {
 		
 		User user = userRepository.findByEmail(scoreDto.getEmail());
 		
@@ -45,8 +45,19 @@ public class ScoreService {
 		
 		score = scoreRepository.saveAndFlush(score);
 
-		// falta armazenar o score médio e o count do movie. Devemos acessar todos os scores de um dado movie
+		// setting score average and count to movie
 		
+		Double scoreAverage = movie.getScores().stream()
+			.mapToDouble(s -> s.getValue())
+			.average().getAsDouble();
+		
+		Integer scoreCount = (int) movie.getScores().stream().count();
+		
+		movie.setCount(scoreCount);
+		movie.setScore(scoreAverage);
+		movie = movieRepository.save(movie);
+		
+		return new MovieDto(movie);
 	}
 	
 }
